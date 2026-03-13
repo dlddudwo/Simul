@@ -1426,10 +1426,47 @@ namespace AMI_Manager.Forms.Main
                 }
 
                 listview_print(inspectionDataList);
+                WarmUpDefectDataFromFirstPanel();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+            }
+        }
+
+        private void WarmUpDefectDataFromFirstPanel()
+        {
+            if (LV_PANEL_LIST.Items.Count == 0)
+            {
+                return;
+            }
+
+            System.Windows.Forms.ListViewItem firstItem = LV_PANEL_LIST.Items[0];
+            if (firstItem == null)
+            {
+                return;
+            }
+
+            bool wasSelected = firstItem.Selected;
+            try
+            {
+                firstItem.Selected = true;
+                int vpNumInt;
+                if (TrySyncSelectedPanelContext(out vpNumInt))
+                {
+                    listview2_init(vpNumInt);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("WarmUpDefectDataFromFirstPanel error: " + ex.ToString());
+            }
+            finally
+            {
+                if (!wasSelected)
+                {
+                    firstItem.Selected = false;
+                }
             }
         }
 
