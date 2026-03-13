@@ -54,7 +54,7 @@ namespace AMI_Manager.Forms.Main
     public partial class LadyBugForm : MetroForm
     {
 
-        //CONFIG사용할 함수 선언 
+        //CONFIG사용할 함수 선언
         // Windows API 함수 선언
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         private static extern int GetPrivateProfileString(
@@ -140,7 +140,7 @@ namespace AMI_Manager.Forms.Main
         private int defectMapColSwap { get { return _configState.DefectMapColSwap; } set { _configState.DefectMapColSwap = value; } }
         private string[] ignoreIndexArray { get { return _configState.IgnoreIndexArray; } set { _configState.IgnoreIndexArray = value; } }
 
-        //변수정리  Product Search 
+        //변수정리  Product Search
         public Insp_info insp_info;
         public string recipe_path { get { return _searchState.RecipePath; } set { _searchState.RecipePath = value; } }
         public string Disk_base { get { return _configState.DiskBase; } set { _configState.DiskBase = value; } }
@@ -189,12 +189,12 @@ namespace AMI_Manager.Forms.Main
         private int Defect_map_select_index = -1;
 
 
-        //변수정리 Classifier 
+        //변수정리 Classifier
         public Bitmap Bitmap_Crop = new Bitmap(512, 128);
         CSimulationRun cSimulationrun = new CSimulationRun();
 
 
-        //Listview Sort 관련 
+        //Listview Sort 관련
         private int lastSortedColumn = -1;
         private SortOrder lastSortOrder = SortOrder.None;
 
@@ -222,7 +222,7 @@ namespace AMI_Manager.Forms.Main
 
 
 
-        //Product Search 
+        //Product Search
         public string Excel_wirte_path = null;
 
         public LadyBugForm()
@@ -603,7 +603,7 @@ namespace AMI_Manager.Forms.Main
         private void LV_PANEL_LIST_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            //EXCEL EXPORT 하기위한 조건문 
+            //EXCEL EXPORT 하기위한 조건문
             if (LV_PANEL_LIST.SelectedItems.Count > 0 && Excel_wirte_path != null)
                 BTN_WRITE_EXCEL.BackColor = Color.ForestGreen;
             else
@@ -627,7 +627,7 @@ namespace AMI_Manager.Forms.Main
                 return;
             }
 
-            //해당 디펙을 상세하게 들어가기 위한 탭변경 초기화 
+            //해당 디펙을 상세하게 들어가기 위한 탭변경 초기화
             TC_LADYBUG.SelectedIndex = 1;
             string panelid = insp_info.Pid;
 
@@ -906,9 +906,9 @@ namespace AMI_Manager.Forms.Main
             for (int vp_num_list_count = 1; vp_num_list_count < vp_info_list.Count + 1; vp_num_list_count++)
             {
                 vp_num_int = vp_num_list_count;
-                try//List Item 정보 뿌리기 
+                try//List Item 정보 뿌리기
                 {
-                    //index 기준은 public으로 갖고있고 해당 정보를 토대로 listview 뿌리기 
+                    //index 기준은 public으로 갖고있고 해당 정보를 토대로 listview 뿌리기
                     //string basepath = Disk_base + result_path_base;
                     //int vp_num_int = Convert.ToInt32(insp_info.Vision_Num.Substring(3, 1));
                     string basepath = vp_info_list[vp_num_int - 1].Path_Vp_Result;
@@ -947,7 +947,7 @@ namespace AMI_Manager.Forms.Main
                     {
                         string pre_path = "";
                         string post_path = "";
-                        //여기다가 pre정보 넣어줘야함 
+                        //여기다가 pre정보 넣어줘야함
                         for (int i = 0; i < files.Length; i++)
                         {
                             if (files[i].Contains("Pre"))
@@ -1019,7 +1019,7 @@ namespace AMI_Manager.Forms.Main
             // Graphics 객체를 사용하여 Bitmap에 그리기
             //using (Graphics g = Graphics.FromImage(bitmap))
             //{
-            //    for(int i=0;i< Feature_row.Count;i++) 
+            //    for(int i=0;i< Feature_row.Count;i++)
             //    {
             //        g.FillEllipse(Brushes.White, (int)(Convert.ToInt32(Feature_row[i]["PIXEL_Y"]?.ToString())/ picturebox_ratio_x), (int)(Convert.ToInt32(Feature_row[i]["PIXEL_X"]?.ToString())/ picturebox_ratio_y), 5, 5); // 반지름 5짜리 원
             //    }
@@ -1083,7 +1083,7 @@ namespace AMI_Manager.Forms.Main
                         System.Drawing.Point point = new System.Drawing.Point(Swap_X_POS, Swap_Y_POS);
                         Defect_Position.Add(point);
 
-                        //여기는 judge부 
+                        //여기는 judge부
                         string Defect_position_judge = Feature_defect["DEFECT_JUDGE"].ToString();
                         if (Defect_position_judge == "OK")
                             Defect_Position_Judge.Add(true);
@@ -1124,7 +1124,7 @@ namespace AMI_Manager.Forms.Main
                         System.Drawing.Point point = new System.Drawing.Point((int)(Convert.ToInt32(Feature_defect[POSITION_FEATURE_NAME_X]?.ToString()) / picturebox_ratio_x), (int)(Convert.ToInt32(Feature_defect[POSITION_FEATURE_NAME_Y]?.ToString()) / picturebox_ratio_y));
                         Defect_Position.Add(point);
 
-                        //여기는 judge부 
+                        //여기는 judge부
                         string Defect_position_judge = Feature_defect["DEFECT_JUDGE"].ToString();
                         if (Defect_position_judge == "OK")
                             Defect_Position_Judge.Add(true);
@@ -1320,7 +1320,7 @@ namespace AMI_Manager.Forms.Main
             //모델네임 확인
             if (CB_RECIPE_WRITE.Checked) // 만약 직접입력창이 활성화되었을 경우
                 Model_name = TB_RECIPE.Text.ToString();
-            else  //라디오버튼으로 나눠서 사용할때 
+            else  //라디오버튼으로 나눠서 사용할때
             {
                 if (RB_RECIPE_FRONT.Checked) // front 인경우
                     Model_name = CBB_RECIPE.Text.Substring(0, Convert.ToInt32(TB_RECIPE.Text));   //앞에서 정해진 크기만큼 짜르기
@@ -1693,7 +1693,7 @@ namespace AMI_Manager.Forms.Main
         private void BTN_DEFECT_JUDGE_Click(object sender, EventArgs e)
         {
             // PRE
-            //PRE 용 DLG 셋팅 
+            //PRE 용 DLG 셋팅
             //LISTVIEW 초기화 다시하기
             LV_DEFECT_LIST_SelectedIndexChangedAsync(this, new EventArgs());
             string[] change_word = { };
@@ -1710,12 +1710,12 @@ namespace AMI_Manager.Forms.Main
             used_Feature_Post.Clear();
 
 
-            //PRE->POST TRUE면 검증 
+            //PRE->POST TRUE면 검증
             if (true)
             {
 
 
-                //Post 사용여부 
+                //Post 사용여부
                 bool use_Post = false;
 
                 for (int i = 0; i < classify_Pre_Infos.Count; i++)
@@ -1747,7 +1747,7 @@ namespace AMI_Manager.Forms.Main
                     // 특정 열의 값 가져오기 (예: 첫 번째 열 = 인덱스 0)
                     int columnValue = Convert.ToInt32(selectedItem.SubItems[0].Text) - 1;
                     selectedIndex = columnValue;
-                    try // Defect Featrue 출력 
+                    try // Defect Featrue 출력
                     {
                         int index = 0;
                         string[] words = select_classify_pre.SCRIPT.Split(' ');
@@ -1835,7 +1835,7 @@ namespace AMI_Manager.Forms.Main
                 {
                     BTN_CHANGE.BackColor = Color.Yellow;
 
-                    //Post 경로 추가 
+                    //Post 경로 추가
                     List<string> NG_str_Post = new List<string>();
                     if (LV_DEFECT_LIST.SelectedIndices.Count > 0)
                     {
@@ -1857,7 +1857,7 @@ namespace AMI_Manager.Forms.Main
                         // 특정 열의 값 가져오기 (예: 첫 번째 열 = 인덱스 0)
                         int columnValue = Convert.ToInt32(selectedItem.SubItems[0].Text) - 1;
                         selectedIndex = columnValue;
-                        try // Defect Featrue 출력 
+                        try // Defect Featrue 출력
                         {
                             int index = 0;
                             string[] words = select_classify_post.SCRIPT.Split(' ');
@@ -1944,7 +1944,7 @@ namespace AMI_Manager.Forms.Main
         }
         public void SetClassifierPrePost(int mode)
         {
-            if (mode == 1) //pre mode 
+            if (mode == 1) //pre mode
             {
                 RTB_ORIGIN_PRE.Show();
                 RTB_ORIGIN_POST.Hide();
@@ -2253,7 +2253,7 @@ namespace AMI_Manager.Forms.Main
             DGV_MAIN.SuspendLayout(); // 레이아웃 계산 중지
             try
             {
-                //항목이 바뀔때 선택된 인덱스를 먼저 찾고 해당 이미지 경로에 접근해서 이미지가 있는경우에 위에 보여준다~ 
+                //항목이 바뀔때 선택된 인덱스를 먼저 찾고 해당 이미지 경로에 접근해서 이미지가 있는경우에 위에 보여준다~
                 if (LV_DEFECT_LIST.SelectedIndices.Count <= 0)
                 {
                     select_nymber_defect = 9999;
@@ -2277,7 +2277,7 @@ namespace AMI_Manager.Forms.Main
                 lastDefectListSelectedIndex = columnValue;
 
                 navi.Defect_index = columnValue;
-                try // Defect Featrue 출력 
+                try // Defect Featrue 출력
                 {
 
                     List<object[]> data = new List<object[]>();
@@ -2356,7 +2356,7 @@ namespace AMI_Manager.Forms.Main
                     PB_DEFECTMAP.Invalidate();
                     check_picturebox = true;
 
-                    //DGV_MAIN 선택된 행이있으면 해당 행으로 옮겨가자 
+                    //DGV_MAIN 선택된 행이있으면 해당 행으로 옮겨가자
                     if (DGV_MAIN.Rows.Count > 0)
                     {
                         if (DGV_MAIN_INDEX < 0 || DGV_MAIN_INDEX >= DGV_MAIN.Rows.Count)
@@ -2370,12 +2370,12 @@ namespace AMI_Manager.Forms.Main
                 }
                 catch
                 {
-                    //feature img_path 경로가 없을때  
+                    //feature img_path 경로가 없을때
                 }
             }
             finally
             {
-                //해당 Feature 정보로 classify 한번 돌리기 
+                //해당 Feature 정보로 classify 한번 돌리기
                 DGV_MAIN.ResumeLayout(); // 레이아웃 계산 재개
                 isDefectSelectionUpdating = false;
             }
@@ -2601,7 +2601,7 @@ namespace AMI_Manager.Forms.Main
         {
             ////후보점 정보에 대하여 판정을 모든 판정을 해야함
             //bool Defect_Judge = true;
-            ////classify의 모든 조건문 
+            ////classify의 모든 조건문
             //for (int i = 0; i < classify_Infos.Count; i++)
             //{
             //    List<string> NG_str = new List<string>();
@@ -2691,7 +2691,7 @@ namespace AMI_Manager.Forms.Main
                     Judge_name = "NG";
                     break;
 
-                case 2:   //NG -> ALL 다보여주기 
+                case 2:   //NG -> ALL 다보여주기
                     break;
             }
             LV_DEFECT_LIST.BeginUpdate();
@@ -2728,7 +2728,7 @@ namespace AMI_Manager.Forms.Main
                     BTN_JUDGE.Text = "Judge (NG)";
                     Judge_mode = 2;
                     break;
-                case 2:   //NG -> ALL 다보여주기 
+                case 2:   //NG -> ALL 다보여주기
                     BTN_JUDGE.Text = "Judge (ALL)";
                     Judge_mode = 0;
                     break;
@@ -2738,7 +2738,7 @@ namespace AMI_Manager.Forms.Main
 
         private void BTN_SIMULATION_RUN_Click(object sender, EventArgs e)
         {
-            //검사 진행할 RECIPE 및 CLASSFFIY 주소 설정 이거야뭐 VP0 기준이라고 생각하자 
+            //검사 진행할 RECIPE 및 CLASSFFIY 주소 설정 이거야뭐 VP0 기준이라고 생각하자
             string SimulRecipePath = vp_info_list[0].Path_Vp_Recipe + "\\" + @CBB_PRODUCT_RECIPE_FOLDER.Text + @"\" + CBB_PRODUCT_RECIPE_FILE.Text;
             string SimulClassfiyPath = vp_info_list[0].Path_Vp_Recipe + "\\" + @CBB_PRODUCT_CLASSIFY_FOLDER.Text + @"\" + CBB_PRODUCT_CLASSIFY_FILE.Text;
             cSimulationrun.Recile_Path = SimulRecipePath;
@@ -2763,9 +2763,9 @@ namespace AMI_Manager.Forms.Main
                 }
             }
 
-            //먼저 조회된 PANEL 기준으로만 재검사를할지말지 
-            // 조회된 애들만 검사 
-            //조회된 대상들은 검사 이력에대한 Panel.Simulation.json 파일위치를 얻어내야함 
+            //먼저 조회된 PANEL 기준으로만 재검사를할지말지
+            // 조회된 애들만 검사
+            //조회된 대상들은 검사 이력에대한 Panel.Simulation.json 파일위치를 얻어내야함
             string recipeFolderName = CBB_PRODUCT_RECIPE_FOLDER.Text;
             string recipeFolderSuffix = recipeFolderName.Length >= 5 ? recipeFolderName.Substring(recipeFolderName.Length - 5) : recipeFolderName;
 
@@ -2832,10 +2832,10 @@ namespace AMI_Manager.Forms.Main
                 return;
             }
 
-            //정상동작 완료 
+            //정상동작 완료
             cSimulationrun.PanelSimulationRun(SimulClassfiyPath, PanelSimulationFilePath);
 
-            //아래 결과쓰기 
+            //아래 결과쓰기
             for (int i = 0; i < cSimulationrun.pnael_Result_Infos.Count; i++)
             {
                 int resultIndex = cSimulationrun.pnael_Result_Infos[i].index;
@@ -2882,7 +2882,7 @@ namespace AMI_Manager.Forms.Main
                 used_Feature_Pre.Clear();
                 used_Feature_Post.Clear();
 
-                //Post 사용여부 
+                //Post 사용여부
                 bool use_Post = false;
 
                 for (int i = 0; i < classify_Pre_Infos.Count; i++)
@@ -2914,7 +2914,7 @@ namespace AMI_Manager.Forms.Main
                     // 특정 열의 값 가져오기 (예: 첫 번째 열 = 인덱스 0)
                     int columnValue = Convert.ToInt32(selectedItem.SubItems[0].Text) - 1;
                     selectedIndex = columnValue;
-                    try // Defect Featrue 출력 
+                    try // Defect Featrue 출력
                     {
                         int index = 0;
                         string[] words = select_classify_pre.SCRIPT.Split(' ');
@@ -2986,7 +2986,7 @@ namespace AMI_Manager.Forms.Main
                     }
                     ApplyFilter(used_Feature_Pre);
 
-                    //빨간색 변환 
+                    //빨간색 변환
                     for (int i = 0; i < NG_str_PRE.Count; i++)
                     {
                         int start_index = 0, end_index = 0;
@@ -3043,7 +3043,7 @@ namespace AMI_Manager.Forms.Main
                 {
                     BTN_CHANGE.ForeColor = Color.Yellow;
 
-                    //Post 경로 추가 
+                    //Post 경로 추가
                     List<string> NG_str_Post = new List<string>();
                     if (LV_DEFECT_LIST.SelectedIndices.Count > 0)
                     {
@@ -3056,7 +3056,7 @@ namespace AMI_Manager.Forms.Main
                         // 특정 열의 값 가져오기 (예: 첫 번째 열 = 인덱스 0)
                         int columnValue = Convert.ToInt32(selectedItem.SubItems[0].Text) - 1;
                         selectedIndex = columnValue;
-                        try // Defect Featrue 출력 
+                        try // Defect Featrue 출력
                         {
                             int index = 0;
                             string[] words = select_classify_post.SCRIPT.Split(' ');
@@ -3128,7 +3128,7 @@ namespace AMI_Manager.Forms.Main
                         }
                         ApplyFilter(used_Feature_Post);
 
-                        //빨간색 변환 
+                        //빨간색 변환
                         for (int i = 0; i < NG_str_Post.Count; i++)
                         {
                             int start_index = 0, end_index = 0;
@@ -3206,7 +3206,7 @@ namespace AMI_Manager.Forms.Main
             //int result = -1;
             //Classify_info select_classify;
             //select_classify.SCRIPT = RTB_ORIGIN_PRE.Text;
-            //try // Defect Featrue 출력 
+            //try // Defect Featrue 출력
             //{
 
 
@@ -3279,7 +3279,7 @@ namespace AMI_Manager.Forms.Main
             //if (result == 0 || result == 2)
             //{
 
-            //    //빨간색 변환 
+            //    //빨간색 변환
             //    for (int i = 0; i < NG_str.Count; i++)
             //    {
             //        int start_index = 0, end_index = 0;
@@ -3433,42 +3433,56 @@ namespace AMI_Manager.Forms.Main
             return true;
         }
 
+        private static void ReleaseComObjectIfNeeded(object comObject)
+        {
+            if (comObject != null && Marshal.IsComObject(comObject))
+            {
+                Marshal.ReleaseComObject(comObject);
+            }
+        }
+
         private void BTN_WRITE_EXCEL_Click(object sender, EventArgs e)
         {
             if (BTN_WRITE_EXCEL.BackColor == Color.ForestGreen)
             {
                 int Row_num = 1;
                 int column = 1;
-                //엑셀 생성 
-                Excel.Application excelApp = new Excel.Application();
-                Excel.Workbook workbook = excelApp.Workbooks.Add();
-                Excel.Worksheet worksheet = workbook.Worksheets.get_Item(1) as Excel.Worksheet;
-                worksheet.Rows.RowHeight = 100;
-                System.Windows.Forms.ListViewItem selectedItem = LV_PANEL_LIST.SelectedItems[0]; // 첫 번째 선택된 항목 접근
-                string select_pid = selectedItem.SubItems[1].Text.ToString();  //시리얼 넘버 
-                string vpnumber = selectedItem.SubItems[6].Text.ToString();  //시리얼 넘버 접근 
-                //1. 헤더 부터 (셀 단위 COM 호출 최소화)
-                List<object> headerValues = new List<object>();
-                for (int i = 0; i < LV_PANEL_LIST.Columns.Count; i++)
-                {
-                    headerValues.Add(LV_PANEL_LIST.Columns[i].Text);
-                }
-                headerValues.Add("Defect Image");
+                Excel.Application excelApp = null;
+                Excel.Workbook workbook = null;
+                Excel.Worksheet worksheet = null;
 
-                if (View_mode == 1)
+                try
                 {
-                    foreach (var kvp in Feature_row[0])
+                    //엑셀 생성
+                    excelApp = new Excel.Application();
+                    workbook = excelApp.Workbooks.Add();
+                    worksheet = workbook.Worksheets.get_Item(1) as Excel.Worksheet;
+                    worksheet.Rows.RowHeight = 100;
+                    System.Windows.Forms.ListViewItem selectedItem = LV_PANEL_LIST.SelectedItems[0]; // 첫 번째 선택된 항목 접근
+                    string select_pid = selectedItem.SubItems[1].Text.ToString();  //시리얼 넘버
+                    string vpnumber = selectedItem.SubItems[6].Text.ToString();  //시리얼 넘버 접근
+                    //1. 헤더 부터 (셀 단위 COM 호출 최소화)
+                    List<object> headerValues = new List<object>();
+                    for (int i = 0; i < LV_PANEL_LIST.Columns.Count; i++)
                     {
-                        headerValues.Add(kvp.Key);
+                        headerValues.Add(LV_PANEL_LIST.Columns[i].Text);
                     }
-                }
-                else
-                {
-                    foreach (var kvp in Feature_row_post[0])
+                    headerValues.Add("Defect Image");
+
+                    if (View_mode == 1)
                     {
-                        headerValues.Add(kvp.Key);
+                        foreach (var kvp in Feature_row[0])
+                        {
+                            headerValues.Add(kvp.Key);
+                        }
                     }
-                }
+                    else
+                    {
+                        foreach (var kvp in Feature_row_post[0])
+                        {
+                            headerValues.Add(kvp.Key);
+                        }
+                    }
 
                 object[,] headerArray = new object[1, headerValues.Count];
                 for (int i = 0; i < headerValues.Count; i++)
@@ -3501,8 +3515,8 @@ namespace AMI_Manager.Forms.Main
                     try
                     {
                         System.Windows.Forms.ListViewItem selectedItem_info = LV_PANEL_LIST.SelectedItems[panel_num]; // 첫 번째 선택된 항목 접근
-                        select_pid = selectedItem_info.SubItems[1].Text.ToString();  //시리얼 넘버 접근 
-                        vpnumber = selectedItem_info.SubItems[6].Text.ToString();  //시리얼 넘버 접근 
+                        select_pid = selectedItem_info.SubItems[1].Text.ToString();  //시리얼 넘버 접근
+                        vpnumber = selectedItem_info.SubItems[6].Text.ToString();  //시리얼 넘버 접근
 
                         int totalDefectCountForPanel = 0;
                         if (View_mode == 1)
@@ -3558,7 +3572,7 @@ namespace AMI_Manager.Forms.Main
                             listview2_ReadCSV_Only(matchedCsv);
 
                         int image_column = 0;
-                        // 실 정보 쓰는 곳 
+                        // 실 정보 쓰는 곳
                         if (View_mode == 1)
                         {
                             for (int feature_count = 0; feature_count < Feature_row.Count; feature_count++)
@@ -3844,9 +3858,47 @@ namespace AMI_Manager.Forms.Main
 
 
                 }
-                workbook.SaveAs(Excel_wirte_path + "\\RESULT.xlsx");
-                MessageBox.Show("Excel_Write_OK");
-                workbook.Close();
+                    workbook.SaveAs(Excel_wirte_path + "\\RESULT.xlsx");
+                    MessageBox.Show("Excel_Write_OK");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("BTN_WRITE_EXCEL_Click Error: " + ex.ToString());
+                    MessageBox.Show("Excel write failed. Please check log/output path.");
+                }
+                finally
+                {
+                    if (workbook != null)
+                    {
+                        try
+                        {
+                            workbook.Close(false);
+                        }
+                        catch
+                        {
+                        }
+                    }
+
+                    if (excelApp != null)
+                    {
+                        try
+                        {
+                            excelApp.Quit();
+                        }
+                        catch
+                        {
+                        }
+                    }
+
+                    ReleaseComObjectIfNeeded(worksheet);
+                    ReleaseComObjectIfNeeded(workbook);
+                    ReleaseComObjectIfNeeded(excelApp);
+
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                }
 
             }
         }
@@ -4023,7 +4075,7 @@ namespace AMI_Manager.Forms.Main
 
         private void PB_DEFECTMAP_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            // 여기에다가 마우스올리면 해당디펙 선택가능하게하는 기능 만들기, 
+            // 여기에다가 마우스올리면 해당디펙 선택가능하게하는 기능 만들기,
 
             System.Drawing.Point mousePosition = new System.Drawing.Point(e.Location.X, e.Location.Y);
 
@@ -4036,7 +4088,7 @@ namespace AMI_Manager.Forms.Main
             {
                 if (IsWithinRange(Defect_Position[i], mousePosition, 5))
                 {
-                    //현재 거리가 5pixel 
+                    //현재 거리가 5pixel
                     Defect_map_select_index = i;
 
                 }
@@ -4131,7 +4183,7 @@ namespace AMI_Manager.Forms.Main
         {
             LV_DEFECT_LIST_SelectedIndexChangedAsync(this, new EventArgs());
             //DGV_MAIN.SuspendLayout(); // 레이아웃 계산 중지
-            ////항목이 바뀔때 선택된 인덱스를 먼저 찾고 해당 이미지 경로에 접근해서 이미지가 있는경우에 위에 보여준다~ 
+            ////항목이 바뀔때 선택된 인덱스를 먼저 찾고 해당 이미지 경로에 접근해서 이미지가 있는경우에 위에 보여준다~
             //int selectedIndex;
             //if (LV_DEFECT_LIST.SelectedIndices.Count > 0)
             //{
@@ -4139,7 +4191,7 @@ namespace AMI_Manager.Forms.Main
 
             //    // 선택된 인덱스를 사용하여 작업 수행
             //    selectedIndex = LV_DEFECT_LIST.SelectedIndices[0];
-            //    try // Defect Featrue 출력 
+            //    try // Defect Featrue 출력
             //    {
 
             //        System.Windows.Forms.ListViewItem selectedItem = LV_DEFECT_LIST.Items[selectedIndex];
@@ -4163,18 +4215,18 @@ namespace AMI_Manager.Forms.Main
             //        check_picturebox = true;
 
 
-            //        //DGV_MAIN 선택된 행이있으면 해당 행으로 옮겨가자 
+            //        //DGV_MAIN 선택된 행이있으면 해당 행으로 옮겨가자
             //        DGV_MAIN.Rows[DGV_MAIN_INDEX].Selected = true;
             //        DGV_MAIN.CurrentCell = DGV_MAIN.Rows[DGV_MAIN_INDEX].Cells[0];
             //    }
             //    catch
             //    {
-            //        //feature img_path 경로가 없을때  
+            //        //feature img_path 경로가 없을때
             //    }
             //}
             //DGV_MAIN.ResumeLayout(); // 레이아웃 계산 재개
 
-            //해당 Feature 정보로 classify 한번 돌리기 
+            //해당 Feature 정보로 classify 한번 돌리기
         }
 
         private void LV_PANEL_LIST_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
@@ -4348,17 +4400,17 @@ namespace AMI_Manager.Forms.Main
         private void BTN_NAVI_PREV_Click(object sender, EventArgs e)
         {
             //후보점 단위인지, 패널단위인지 확인
-            if (RB_NAVI_PANEL.Checked) //패널 단위인경우 
+            if (RB_NAVI_PANEL.Checked) //패널 단위인경우
             {
 
             }
-            else  // 후보점 단위인경우 
+            else  // 후보점 단위인경우
             {
 
                 // 선택된 항목이 없으면 마지막 항목을 선택
                 if (LV_DEFECT_LIST.SelectedItems.Count == 0)
                 {
-                    //이전패널로 넘기는거구현해야함 
+                    //이전패널로 넘기는거구현해야함
                 }
 
                 // 현재 선택된 항목의 인덱스
@@ -4367,7 +4419,7 @@ namespace AMI_Manager.Forms.Main
                 // 첫 번째 항목이면 더 이상 이동할 수 없음 → 메시지 표시
                 if (curIdx == 0)
                 {
-                    //이전패널로 넘기는거구현해야함 
+                    //이전패널로 넘기는거구현해야함
                 }
 
                 // 이전 항목 선택
@@ -4385,12 +4437,12 @@ namespace AMI_Manager.Forms.Main
 
 
             //후보점 단위인지, 패널단위인지 확인
-            if (RB_NAVI_PANEL.Checked) //패널 단위인경우 
+            if (RB_NAVI_PANEL.Checked) //패널 단위인경우
             {
                 //단순하게 다음패널로 넘기기
 
 
-                //다음패널 어떻게 보여줄거? 
+                //다음패널 어떻게 보여줄거?
 
                 //string panelid = inspectionDataList[navi.Panel_index+1].SerialNumber;
                 //BTN_DEFECT_PANEL.Text = panelid;
@@ -4400,7 +4452,7 @@ namespace AMI_Manager.Forms.Main
 
 
             }
-            else  // 후보점 단위인경우 
+            else  // 후보점 단위인경우
             {
                 // 현재 선택된 항목이 있는지 확인
                 if (LV_DEFECT_LIST.SelectedItems.Count == 0)
@@ -4420,7 +4472,7 @@ namespace AMI_Manager.Forms.Main
                     // 마지막 항목인지 확인
                     if (currentIndex == LV_DEFECT_LIST.Items.Count - 1)
                     {
-                        // 마지막 항목이면 다음 패널로 넘겨줘야함  위에꺼 구현해서 연동하자 
+                        // 마지막 항목이면 다음 패널로 넘겨줘야함  위에꺼 구현해서 연동하자
 
                     }
 
