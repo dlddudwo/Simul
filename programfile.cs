@@ -2272,7 +2272,13 @@ namespace AMI_Manager.Forms.Main
                             sum += VP_Defect_num[vpnum];
                         }
 
-                        LoadFileNamesFromBinary(Crop_bin_path_Pre[VP_select_num], Ptn_num, defectIdx);
+                        Bitmap loadedPreview = LoadFileNamesFromBinary(Crop_bin_path_Pre[VP_select_num], Ptn_num, defectIdx);
+                        if (loadedPreview != null)
+                        {
+                            SetPictureBoxImage(PB_DEFECT_ARRAY, loadedPreview);
+                            originalImage = loadedPreview;
+                            Clipboard.SetImage(loadedPreview);
+                        }
                     }
                     else
                     {
@@ -2300,7 +2306,13 @@ namespace AMI_Manager.Forms.Main
                             }
                             sum += VP_Defect_num[vpnum];
                         }
-                        LoadFileNamesFromBinary(Crop_bin_path_Post[VP_select_num], Ptn_num, defectIdx);
+                        Bitmap loadedPreview = LoadFileNamesFromBinary(Crop_bin_path_Post[VP_select_num], Ptn_num, defectIdx);
+                        if (loadedPreview != null)
+                        {
+                            SetPictureBoxImage(PB_DEFECT_ARRAY, loadedPreview);
+                            originalImage = loadedPreview;
+                            Clipboard.SetImage(loadedPreview);
+                        }
                     }
 
                     select_nymber_defect = columnValue;
@@ -3546,7 +3558,7 @@ namespace AMI_Manager.Forms.Main
                                     {
                                         Bitmap loadedBitmap = LoadFileNamesFromBinary(
                                             Crop_bin_path_Pre[vpIndex],
-                                            0, feature_count, false);
+                                            0, feature_count);
                                         if (loadedBitmap == null)
                                         {
                                             continue;
@@ -3705,7 +3717,7 @@ namespace AMI_Manager.Forms.Main
                                 {
                                     try
                                     {
-                                        Bitmap loadedBitmap = LoadFileNamesFromBinary(Crop_bin_path_Pre[vpIndex], 0, feature_count, false);
+                                        Bitmap loadedBitmap = LoadFileNamesFromBinary(Crop_bin_path_Pre[vpIndex], 0, feature_count);
                                         if (loadedBitmap == null)
                                         {
                                             continue;
@@ -4580,7 +4592,7 @@ namespace AMI_Manager.Forms.Main
             BTN_DEFECT_NAME.Text = "Defect Name (" + DefectJudge + ")";
         }
 
-        public Bitmap LoadFileNamesFromBinary(string filePath, int ptn_num, int defect_num, bool updatePreview = true) //filepath  배열순서대로 vp0~
+        public Bitmap LoadFileNamesFromBinary(string filePath, int ptn_num, int defect_num) //filepath  배열순서대로 vp0~
         {
             try
             {
@@ -4634,12 +4646,6 @@ namespace AMI_Manager.Forms.Main
                                         Bitmap_Crop.SetPixel(j, i_h, Color.FromArgb(pixelValue, pixelValue, pixelValue));
                                     }
                                 }
-                                if (updatePreview)
-                                {
-                                    SetPictureBoxImage(PB_DEFECT_ARRAY, Bitmap_Crop);
-                                    originalImage = Bitmap_Crop;
-                                    Clipboard.SetImage(Bitmap_Crop);
-                                }
                                 return Bitmap_Crop;
                                 break;
 
@@ -4657,10 +4663,6 @@ namespace AMI_Manager.Forms.Main
             catch
             {
                 //Console.Write("왜죽늬?");
-            }
-            if (updatePreview)
-            {
-                Clipboard.SetImage(Bitmap_Crop);
             }
             return Bitmap_Crop;
 
