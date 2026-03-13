@@ -881,6 +881,28 @@ namespace AMI_Manager.Forms.Main
             Defect_Position_Judge.Clear();
             LV_DEFECT_LIST.Items.Clear();
 
+            string visionPrefix = !string.IsNullOrEmpty(insp_info.Vision_Num) && insp_info.Vision_Num.Length >= 3
+                ? insp_info.Vision_Num.Substring(0, 3)
+                : "VP0";
+
+            string recipeJsonPath = vp_info_list[0].Path_Vp_Recipe + "\\" + CBB_RECIPE.Text + "\\Recipe.json";
+            if (File.Exists(recipeJsonPath))
+            {
+                using (StreamReader file = File.OpenText(recipeJsonPath))
+                {
+                    using (JsonTextReader reader = new JsonTextReader(file))
+                    {
+                        JObject jsondata = (JObject)JToken.ReadFrom(reader);
+
+                        insp_info.panel_width = Convert.ToInt32(jsondata["INSP_INFO"]["PANEL_SIZE_WIDHT"].ToString());
+                        insp_info.panel_Height = Convert.ToInt32(jsondata["INSP_INFO"]["PANEL_SIZE_HEIGHT"].ToString());
+                    }
+                }
+            }
+
+            CBB_SINGLE_RECIPE.Items.Clear();
+            CBB_SINGLE_RECIPE.Items.Add("ALL");
+
             for (int vp_num_list_count = 1; vp_num_list_count < vp_info_list.Count + 1; vp_num_list_count++)
             {
                 vp_num_int = vp_num_list_count;
@@ -890,10 +912,15 @@ namespace AMI_Manager.Forms.Main
                     //string basepath = Disk_base + result_path_base;
                     //int vp_num_int = Convert.ToInt32(insp_info.Vision_Num.Substring(3, 1));
                     string basepath = vp_info_list[vp_num_int - 1].Path_Vp_Result;
-                    insp_info.Vision_Num = insp_info.Vision_Num.Substring(0, 3) + vp_num_int.ToString();
+                    insp_info.Vision_Num = visionPrefix + vp_num_int.ToString();
                     string img_path = basepath + "\\" + insp_info.insp_Data + "\\" + Model_name + "\\" + insp_info.Pid + "_" + insp_info.Vision_Num;
                     Console.WriteLine("basepath : " + basepath);
                     Console.WriteLine("img_path : " + img_path);
+
+                    if (!Directory.Exists(img_path))
+                    {
+                        continue;
+                    }
 
                     //string img_path = basepath + insp_info.insp_Data + "\\" + "x2292" + "\\" + insp_info.Pid + "_" + insp_info.Vision_Num;
                     string[] files = Directory.GetFiles(img_path, "*.csv");
@@ -912,25 +939,9 @@ namespace AMI_Manager.Forms.Main
                         Crop_bin_path_Pre[vp_num_list_count - 1] = ResolveBinPathOrExtractFromZip(img_path, true);
                         Crop_bin_path_Post[vp_num_list_count - 1] = ResolveBinPathOrExtractFromZip(img_path, false);
                     }
-
-
-
-                    //RECIPE 읽어서 일단 크기좀알아내자 
-                    using (StreamReader file = File.OpenText(vp_info_list[0].Path_Vp_Recipe + "\\" + CBB_RECIPE.Text + "\\" + "Recipe.json"))
-                    {
-                        CBB_SINGLE_RECIPE.Items.Add("ALL");
-                        using (JsonTextReader reader = new JsonTextReader(file))
-                        {
-                            JObject jsondata = (JObject)JToken.ReadFrom(reader);
-
-                            insp_info.panel_width = Convert.ToInt32(jsondata["INSP_INFO"]["PANEL_SIZE_WIDHT"].ToString());
-                            insp_info.panel_Height = Convert.ToInt32(jsondata["INSP_INFO"]["PANEL_SIZE_HEIGHT"].ToString());
-                        }
-                    }
-
                     //컨트롤의 가로 = 패널의 세로   세로는 가로 일단 배율부터 찾자
-                    picturebox_ratio_x = (double)insp_info.panel_width / PB_DEFECTMAP.Width;
-                    picturebox_ratio_y = (double)insp_info.panel_Height / PB_DEFECTMAP.Height;
+                    picturebox_ratio_x = PB_DEFECTMAP.Width > 0 ? (double)insp_info.panel_width / PB_DEFECTMAP.Width : 1d;
+                    picturebox_ratio_y = PB_DEFECTMAP.Height > 0 ? (double)insp_info.panel_Height / PB_DEFECTMAP.Height : 1d;
 
                     if (files.Length > 0)
                     {
@@ -950,7 +961,7 @@ namespace AMI_Manager.Forms.Main
                 }
                 catch (Exception e)
                 {
-                    Console.Write(e.Message);
+                    Console.WriteLine("listview2_init error(VP" + vp_num_list_count + ") : " + e.ToString());
                 }
             }
             LV_DEFECT_LIST.BeginUpdate();
@@ -962,7 +973,14 @@ namespace AMI_Manager.Forms.Main
                     {
                         var listViewItem = new System.Windows.Forms.ListViewItem((i + 1).ToString());
                         for (int j = 0; j < VIEW_DEFECT_FEATURE_NAME.Count; j++)
-                            listViewItem.SubItems.Add(Feature_row[i][VIEW_DEFECT_FEATURE_NAME[j]]?.ToString());
+                        {
+                            object featureValue;
+                            if (!Feature_row[i].TryGetValue(VIEW_DEFECT_FEATURE_NAME[j], out featureValue))
+                            {
+                                featureValue = string.Empty;
+                            }
+                            listViewItem.SubItems.Add(featureValue?.ToString());
+                        }
                         LV_DEFECT_LIST.Items.Add(listViewItem);
                     }
                 }
@@ -972,7 +990,14 @@ namespace AMI_Manager.Forms.Main
                     {
                         var listViewItem = new System.Windows.Forms.ListViewItem((i + 1).ToString());
                         for (int j = 0; j < VIEW_DEFECT_FEATURE_NAME.Count; j++)
-                            listViewItem.SubItems.Add(Feature_row_post[i][VIEW_DEFECT_FEATURE_NAME[j]]?.ToString());
+                        {
+                            object featureValue;
+                            if (!Feature_row_post[i].TryGetValue(VIEW_DEFECT_FEATURE_NAME[j], out featureValue))
+                            {
+                                featureValue = string.Empty;
+                            }
+                            listViewItem.SubItems.Add(featureValue?.ToString());
+                        }
                         LV_DEFECT_LIST.Items.Add(listViewItem);
                     }
                 }
@@ -983,7 +1008,9 @@ namespace AMI_Manager.Forms.Main
             }
             //그뒤에  PB에 좌표 투영
             // PictureBox의 크기와 동일한 Bitmap 생성
-            Bitmap bitmap = new Bitmap((int)(insp_info.panel_width / picturebox_ratio_x), (int)(insp_info.panel_Height / picturebox_ratio_y));
+            int defectMapWidth = Math.Max(1, (int)(insp_info.panel_width / picturebox_ratio_x));
+            int defectMapHeight = Math.Max(1, (int)(insp_info.panel_Height / picturebox_ratio_y));
+            Bitmap bitmap = new Bitmap(defectMapWidth, defectMapHeight);
             using (Graphics gridGraphics = Graphics.FromImage(bitmap))
             {
                 DrawDefectMapGrid(gridGraphics, bitmap.Width, bitmap.Height);
