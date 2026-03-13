@@ -3408,6 +3408,8 @@ namespace AMI_Manager.Forms.Main
 
                 Row_num++;
 
+                List<string> tempImageFiles = new List<string>();
+
                 Dictionary<string, int> inspectionIndexBySerial = new Dictionary<string, int>(StringComparer.Ordinal);
                 for (int i = 0; i < inspectionDataList.Count; i++)
                 {
@@ -3530,29 +3532,20 @@ namespace AMI_Manager.Forms.Main
                                             string tempFilePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".png");
                                             bitmap.Save(tempFilePath, ImageFormat.Png);
 
-                                            try
-                                            {
-                                                Excel.Range cell = worksheet.Cells[Row_num, column];
-                                                float left = (float)cell.Left;
-                                                float top = (float)cell.Top;
-                                                float width = bitmap.Width;
-                                                float height = 100f;
+                                            Excel.Range cell = worksheet.Cells[Row_num, column];
+                                            float left = (float)cell.Left;
+                                            float top = (float)cell.Top;
+                                            float width = bitmap.Width;
+                                            float height = 100f;
 
-                                                Excel.Shape shape = worksheet.Shapes.AddPicture(
-                                                    tempFilePath,
-                                                    Microsoft.Office.Core.MsoTriState.msoFalse,
-                                                    Microsoft.Office.Core.MsoTriState.msoTrue,
-                                                    left, top, width, height);
+                                            Excel.Shape shape = worksheet.Shapes.AddPicture(
+                                                tempFilePath,
+                                                Microsoft.Office.Core.MsoTriState.msoFalse,
+                                                Microsoft.Office.Core.MsoTriState.msoTrue,
+                                                left, top, width, height);
 
-                                                shape.Placement = Excel.XlPlacement.xlMoveAndSize;
-                                            }
-                                            finally
-                                            {
-                                                if (File.Exists(tempFilePath))
-                                                {
-                                                    File.Delete(tempFilePath);
-                                                }
-                                            }
+                                            shape.Placement = Excel.XlPlacement.xlMoveAndSize;
+                                            tempImageFiles.Add(tempFilePath);
                                         }
                                     }
                                     catch (Exception ex)
@@ -3678,7 +3671,7 @@ namespace AMI_Manager.Forms.Main
                                 {
                                     try
                                     {
-                                        Bitmap loadedBitmap = LoadFileNamesFromBinary(Crop_bin_path_Pre[vpIndex], 0, feature_count);
+                                        Bitmap loadedBitmap = LoadFileNamesFromBinary(Crop_bin_path_Post[vpIndex], 0, feature_count);
                                         if (loadedBitmap == null)
                                         {
                                             continue;
@@ -3689,29 +3682,20 @@ namespace AMI_Manager.Forms.Main
                                             string tempFilePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".png");
                                             bitmap.Save(tempFilePath, ImageFormat.Png);
 
-                                            try
-                                            {
-                                                Excel.Range cell = worksheet.Cells[Row_num, column];
-                                                float left = (float)((double)cell.Left);
-                                                float top = (float)((double)cell.Top);
-                                                float width = bitmap.Width;
-                                                float height = 100;
+                                            Excel.Range cell = worksheet.Cells[Row_num, column];
+                                            float left = (float)((double)cell.Left);
+                                            float top = (float)((double)cell.Top);
+                                            float width = bitmap.Width;
+                                            float height = 100;
 
-                                                Excel.Shape shape = worksheet.Shapes.AddPicture(
-                                                    tempFilePath,
-                                                    Microsoft.Office.Core.MsoTriState.msoFalse,
-                                                    Microsoft.Office.Core.MsoTriState.msoCTrue,
-                                                    left, top, width, height
-                                                );
-                                                shape.Placement = Excel.XlPlacement.xlMoveAndSize;
-                                            }
-                                            finally
-                                            {
-                                                if (File.Exists(tempFilePath))
-                                                {
-                                                    File.Delete(tempFilePath);
-                                                }
-                                            }
+                                            Excel.Shape shape = worksheet.Shapes.AddPicture(
+                                                tempFilePath,
+                                                Microsoft.Office.Core.MsoTriState.msoFalse,
+                                                Microsoft.Office.Core.MsoTriState.msoTrue,
+                                                left, top, width, height
+                                            );
+                                            shape.Placement = Excel.XlPlacement.xlMoveAndSize;
+                                            tempImageFiles.Add(tempFilePath);
                                         }
                                     }
                                     catch (Exception ex)
@@ -3771,6 +3755,15 @@ namespace AMI_Manager.Forms.Main
                 workbook.SaveAs(Excel_wirte_path + "\\RESULT.xlsx");
                 MessageBox.Show("Excel_Write_OK");
                 workbook.Close();
+
+                for (int i = 0; i < tempImageFiles.Count; i++)
+                {
+                    string tempImageFile = tempImageFiles[i];
+                    if (File.Exists(tempImageFile))
+                    {
+                        File.Delete(tempImageFile);
+                    }
+                }
 
             }
         }
