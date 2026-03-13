@@ -3357,6 +3357,63 @@ namespace AMI_Manager.Forms.Main
             return true;
         }
 
+        private bool TryInsertExcelImage(Excel.Worksheet worksheet, int rowNum, int columnNum, Bitmap loadedBitmap, List<string> tempImageFiles)
+        {
+            if (worksheet == null || loadedBitmap == null)
+            {
+                return false;
+            }
+
+            string tempFilePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".bmp");
+            using (Bitmap bitmap24 = new Bitmap(loadedBitmap.Width, loadedBitmap.Height, PixelFormat.Format24bppRgb))
+            using (Graphics graphics = Graphics.FromImage(bitmap24))
+            {
+                graphics.DrawImage(loadedBitmap, 0, 0, loadedBitmap.Width, loadedBitmap.Height);
+                bitmap24.Save(tempFilePath, ImageFormat.Bmp);
+
+                Excel.Range cell = worksheet.Cells[rowNum, columnNum];
+                float left = (float)((double)cell.Left);
+                float top = (float)((double)cell.Top);
+                float width = bitmap24.Width;
+                float height = 100f;
+
+                const int maxRetry = 3;
+                for (int retry = 0; retry < maxRetry; retry++)
+                {
+                    try
+                    {
+                        Excel.Shape shape = worksheet.Shapes.AddPicture(
+                            tempFilePath,
+                            Microsoft.Office.Core.MsoTriState.msoFalse,
+                            Microsoft.Office.Core.MsoTriState.msoTrue,
+                            left,
+                            top,
+                            width,
+                            height);
+
+                        shape.Placement = Excel.XlPlacement.xlMoveAndSize;
+                        tempImageFiles.Add(tempFilePath);
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (retry == maxRetry - 1)
+                        {
+                            Console.WriteLine("Image Paste Error :" + ex.ToString());
+                        }
+                        Thread.Sleep(50);
+                    }
+                }
+            }
+
+            if (File.Exists(tempFilePath))
+            {
+                File.Delete(tempFilePath);
+            }
+
+            return false;
+        }
+
         private void BTN_WRITE_EXCEL_Click(object sender, EventArgs e)
         {
             if (BTN_WRITE_EXCEL.BackColor == Color.ForestGreen)
@@ -3527,83 +3584,15 @@ namespace AMI_Manager.Forms.Main
                                             continue;
                                         }
 
-                                        using (Bitmap bitmap = new Bitmap(loadedBitmap))
+                                        if (!TryInsertExcelImage(worksheet, Row_num, column, loadedBitmap, tempImageFiles))
                                         {
-                                            string tempFilePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".png");
-                                            bitmap.Save(tempFilePath, ImageFormat.Png);
-
-                                            Excel.Range cell = worksheet.Cells[Row_num, column];
-                                            float left = (float)cell.Left;
-                                            float top = (float)cell.Top;
-                                            float width = bitmap.Width;
-                                            float height = 100f;
-
-                                            Excel.Shape shape = worksheet.Shapes.AddPicture(
-                                                tempFilePath,
-                                                Microsoft.Office.Core.MsoTriState.msoFalse,
-                                                Microsoft.Office.Core.MsoTriState.msoTrue,
-                                                left, top, width, height);
-
-                                            shape.Placement = Excel.XlPlacement.xlMoveAndSize;
-                                            tempImageFiles.Add(tempFilePath);
+                                            continue;
                                         }
                                     }
                                     catch (Exception ex)
                                     {
                                         Console.WriteLine("Image Paste Error : " + ex.ToString());
                                     }
-                                    finally
-                                    {
-                                        //// 임시 파일 정리
-                                        //if (File.Exists(tempFilePath))
-                                        //    File.Delete(tempFilePath);
-                                    }
-                                }
-
-
-                                if (false)
-                                {
-                                    try
-                                    {
-                                        // Bitmap 이미지를 로드
-                                        Bitmap bitmap = LoadFileNamesFromBinary(Crop_bin_path_Pre[vpIndex], 0, feature_count);//vp2추가필요
-
-                                        // Bitmap 이미지를 메모리 스트림으로 변환
-                                        using (MemoryStream memoryStream = new MemoryStream())
-                                        {
-                                            bitmap.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
-                                            byte[] imageBytes = memoryStream.ToArray();
-
-                                            // 임시 파일 생성
-                                            string tempFilePath = Path.GetTempFileName();
-                                            File.WriteAllBytes(tempFilePath, imageBytes);
-
-                                            // 엑셀 워크시트에 이미지 삽입
-                                            Excel.Range cell = worksheet.Cells[Row_num, column];
-                                            float left = (float)((double)cell.Left);
-                                            float top = (float)((double)cell.Top);
-                                            float width = bitmap.Width;
-                                            float height = 100;
-
-                                            Excel.Shape shape = worksheet.Shapes.AddPicture(
-                                                tempFilePath,  // 임시 파일 경로
-                                                Microsoft.Office.Core.MsoTriState.msoFalse,
-                                                Microsoft.Office.Core.MsoTriState.msoCTrue,
-                                                left, top, width, height
-                                            );
-
-                                            shape.Placement = Excel.XlPlacement.xlMoveAndSize;
-
-
-                                            // 임시 파일 삭제
-                                            File.Delete(tempFilePath);
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Console.WriteLine("Image Paste Error :" + ex.ToString());
-                                    }
-
                                 }
 
                                 //-----
@@ -3677,25 +3666,9 @@ namespace AMI_Manager.Forms.Main
                                             continue;
                                         }
 
-                                        using (Bitmap bitmap = new Bitmap(loadedBitmap))
+                                        if (!TryInsertExcelImage(worksheet, Row_num, column, loadedBitmap, tempImageFiles))
                                         {
-                                            string tempFilePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".png");
-                                            bitmap.Save(tempFilePath, ImageFormat.Png);
-
-                                            Excel.Range cell = worksheet.Cells[Row_num, column];
-                                            float left = (float)((double)cell.Left);
-                                            float top = (float)((double)cell.Top);
-                                            float width = bitmap.Width;
-                                            float height = 100;
-
-                                            Excel.Shape shape = worksheet.Shapes.AddPicture(
-                                                tempFilePath,
-                                                Microsoft.Office.Core.MsoTriState.msoFalse,
-                                                Microsoft.Office.Core.MsoTriState.msoTrue,
-                                                left, top, width, height
-                                            );
-                                            shape.Placement = Excel.XlPlacement.xlMoveAndSize;
-                                            tempImageFiles.Add(tempFilePath);
+                                            continue;
                                         }
                                     }
                                     catch (Exception ex)
