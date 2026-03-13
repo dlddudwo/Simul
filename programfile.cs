@@ -3546,7 +3546,7 @@ namespace AMI_Manager.Forms.Main
                                     {
                                         Bitmap loadedBitmap = LoadFileNamesFromBinary(
                                             Crop_bin_path_Pre[vpIndex],
-                                            0, feature_count);
+                                            0, feature_count, false);
                                         if (loadedBitmap == null)
                                         {
                                             continue;
@@ -3705,7 +3705,7 @@ namespace AMI_Manager.Forms.Main
                                 {
                                     try
                                     {
-                                        Bitmap loadedBitmap = LoadFileNamesFromBinary(Crop_bin_path_Pre[vpIndex], 0, feature_count);
+                                        Bitmap loadedBitmap = LoadFileNamesFromBinary(Crop_bin_path_Pre[vpIndex], 0, feature_count, false);
                                         if (loadedBitmap == null)
                                         {
                                             continue;
@@ -4580,7 +4580,7 @@ namespace AMI_Manager.Forms.Main
             BTN_DEFECT_NAME.Text = "Defect Name (" + DefectJudge + ")";
         }
 
-        public Bitmap LoadFileNamesFromBinary(string filePath, int ptn_num, int defect_num) //filepath  배열순서대로 vp0~
+        public Bitmap LoadFileNamesFromBinary(string filePath, int ptn_num, int defect_num, bool updatePreview = true) //filepath  배열순서대로 vp0~
         {
             try
             {
@@ -4634,9 +4634,12 @@ namespace AMI_Manager.Forms.Main
                                         Bitmap_Crop.SetPixel(j, i_h, Color.FromArgb(pixelValue, pixelValue, pixelValue));
                                     }
                                 }
-                                SetPictureBoxImage(PB_DEFECT_ARRAY, Bitmap_Crop);
-                                originalImage = Bitmap_Crop;
-                                Clipboard.SetImage(Bitmap_Crop);
+                                if (updatePreview)
+                                {
+                                    SetPictureBoxImage(PB_DEFECT_ARRAY, Bitmap_Crop);
+                                    originalImage = Bitmap_Crop;
+                                    Clipboard.SetImage(Bitmap_Crop);
+                                }
                                 return Bitmap_Crop;
                                 break;
 
@@ -4655,7 +4658,10 @@ namespace AMI_Manager.Forms.Main
             {
                 //Console.Write("왜죽늬?");
             }
-            Clipboard.SetImage(Bitmap_Crop);
+            if (updatePreview)
+            {
+                Clipboard.SetImage(Bitmap_Crop);
+            }
             return Bitmap_Crop;
 
 
